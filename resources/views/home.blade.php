@@ -4,6 +4,10 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
+            @if (session('status'))
+                <p class="alert alert-success">{{ session('status') }}</p>
+            @endif
+
             <div class="card">
                 <h1 class="card-header text-muted">フラッシュ暗算</h1>
 

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\History;
 
 class PlayController extends Controller
 {
@@ -37,6 +39,19 @@ class PlayController extends Controller
             abort(400);
         }
 
-        return view('result', $request->only('score'));
+        $score = $request->input('score');
+
+        if (Auth::check()) {
+            $user = Auth::user();
+            History::create([
+                'user_id' => $user->id,
+                'score' => $score,
+            ]);
+        }
+        else {
+            dump('Guest');
+        }
+
+        return view('result', [ 'score' => $score ]);
     }
 }
