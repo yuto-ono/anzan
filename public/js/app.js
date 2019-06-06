@@ -1862,35 +1862,82 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['url'],
   data: function data() {
     return {
       mode: 'show',
       score: 0,
       number: 0,
       answer: '',
+      correct_answer: 0,
+      is_correct: false,
       hidden: true,
       index: 0,
       interval: 500,
-      numbers: [15, 32, 54]
+      numbers: [],
+      option: null,
+      state: []
     };
   },
   created: function created() {
     var option = document.getElementById('play_option');
 
     if (option) {
-      this.number = option.innerHTML;
+      this.option = JSON.parse(option.innerHTML);
     }
+
+    this.state = this.option.shift();
   },
   mounted: function mounted() {
-    var _this = this;
-
-    Object(timers__WEBPACK_IMPORTED_MODULE_0__["setTimeout"])(function () {
-      return _this.showNextNumber();
-    }, 1000);
+    this.start();
   },
   methods: {
+    start: function start() {
+      var _this = this;
+
+      if (this.state.times >= 0) {
+        if (this.state.times > 0) {
+          this.state.times--;
+        } else {
+          this.state = this.option.shift();
+        }
+      }
+
+      var lower = Math.pow(10, this.state.digits - 1);
+      var upper = Math.pow(10, this.state.digits);
+      var range = upper - lower;
+      this.interval = this.state.interval >> 1;
+      this.numbers.length = 0;
+
+      for (var i = 0; i < this.state.quantity; i++) {
+        var r = Math.floor(Math.random() * range) + lower;
+        this.numbers.push(r);
+      }
+
+      this.mode = 'show';
+      this.index = 0;
+      this.answer = '';
+      Object(timers__WEBPACK_IMPORTED_MODULE_0__["setTimeout"])(function () {
+        return _this.showNextNumber();
+      }, 1000);
+    },
     showNextNumber: function showNextNumber() {
       var _this2 = this;
 
@@ -1923,8 +1970,29 @@ __webpack_require__.r(__webpack_exports__);
         return _this4.$refs.answer.focus();
       }, 0);
     },
-    onSubmit: function onSubmit() {
-      alert('a');
+    onSubmit: function onSubmit(event) {
+      if ('input' === this.mode) {
+        this.is_correct = false;
+
+        if ('number' === typeof this.answer) {
+          this.correct_answer = this.numbers.reduce(function (acc, cur) {
+            return acc + cur;
+          });
+
+          if (this.answer === this.correct_answer) {
+            this.is_correct = true;
+          }
+        }
+
+        if (this.is_correct) this.score++;
+        this.mode = 'result';
+        event.preventDefault();
+      } else if ('result' === this.mode) {
+        if (this.is_correct) {
+          this.start();
+          event.preventDefault();
+        }
+      }
     }
   }
 });
@@ -6388,7 +6456,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".score[data-v-31e16cc0] {\n  padding: 0.5rem 1rem 0;\n  font-size: 1.25rem;\n}\n.number[data-v-31e16cc0] {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 10rem;\n  font-size: 5rem;\n  text-align: center;\n}\n.number.-hidden[data-v-31e16cc0] {\n  visibility: hidden;\n}\n.input-panel[data-v-31e16cc0] {\n  width: 400px;\n  max-width: 100%;\n  margin-left: auto;\n  margin-right: auto;\n  padding: 1rem;\n}", ""]);
+exports.push([module.i, ".switch-enter-active[data-v-31e16cc0] {\n  transition: all 0.5s;\n}\n.switch-leave-active[data-v-31e16cc0] {\n  transition: opacity 0.2s;\n}\n.switch-enter[data-v-31e16cc0], .switch-leave-to[data-v-31e16cc0] {\n  opacity: 0;\n}\n.switch-enter[data-v-31e16cc0] {\n  -webkit-transform: translateY(2rem);\n          transform: translateY(2rem);\n}\n.score[data-v-31e16cc0] {\n  padding: 0.5rem 1rem 0;\n  font-size: 1.25rem;\n}\n.number[data-v-31e16cc0] {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 10rem;\n  font-size: 5rem;\n  text-align: center;\n}\n.number.-hidden[data-v-31e16cc0] {\n  visibility: hidden;\n}\n.input-panel[data-v-31e16cc0] {\n  position: relative;\n  width: 25rem;\n  max-width: 100%;\n  margin-left: auto;\n  margin-right: auto;\n  padding: 1rem;\n}\n.result__text[data-v-31e16cc0] {\n  font-size: 1.5rem;\n  line-height: 1.2;\n}\n.result__text.-correct[data-v-31e16cc0] {\n  color: var(--success);\n}\n.result__icon[data-v-31e16cc0] {\n  margin-right: 1rem;\n}\n.result__icon.-correct[data-v-31e16cc0] {\n  font-size: 2.5rem;\n  vertical-align: -0.25rem;\n}\n.result__icon.-incorrect[data-v-31e16cc0] {\n  font-size: 3rem;\n  vertical-align: -0.25rem;\n}\n.result__answer[data-v-31e16cc0] {\n  padding-bottom: 0.5rem;\n}", ""]);
 
 // exports
 
@@ -37873,7 +37941,7 @@ var render = function() {
             _vm._v("Score " + _vm._s(_vm.score))
           ]),
           _vm._v(" "),
-          _vm.mode == "show"
+          "show" === _vm.mode
             ? _c(
                 "p",
                 { staticClass: "number", class: { "-hidden": _vm.hidden } },
@@ -37883,70 +37951,191 @@ var render = function() {
                 "form",
                 {
                   staticClass: "input-panel",
-                  attrs: { action: "" },
+                  attrs: { method: "POST", action: _vm.url },
                   on: {
                     submit: function($event) {
-                      $event.preventDefault()
                       return _vm.onSubmit($event)
                     }
                   }
                 },
                 [
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("label", { attrs: { for: "answer" } }, [
-                      _vm._v("答えを入力してください（半角数字）")
-                    ]),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model.number",
-                          value: _vm.answer,
-                          expression: "answer",
-                          modifiers: { number: true }
-                        }
-                      ],
-                      ref: "answer",
-                      staticClass: "form-control",
-                      attrs: { type: "tel" },
-                      domProps: { value: _vm.answer },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.answer = _vm._n($event.target.value)
-                        },
-                        blur: function($event) {
-                          return _vm.$forceUpdate()
-                        }
+                  _vm._t("default"),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.score,
+                        expression: "score"
                       }
-                    }),
-                    _vm._v(" "),
-                    _vm._m(0)
-                  ])
-                ]
+                    ],
+                    attrs: { type: "hidden", name: "score" },
+                    domProps: { value: _vm.score },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.score = $event.target.value
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "form-group" },
+                    [
+                      _c("label", { attrs: { for: "answer" } }, [
+                        _vm._v("答えを入力してください（半角数字）")
+                      ]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model.number",
+                            value: _vm.answer,
+                            expression: "answer",
+                            modifiers: { number: true }
+                          }
+                        ],
+                        ref: "answer",
+                        staticClass: "form-control",
+                        attrs: { type: "tel" },
+                        domProps: { value: _vm.answer },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.answer = _vm._n($event.target.value)
+                          },
+                          blur: function($event) {
+                            return _vm.$forceUpdate()
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "transition",
+                        { attrs: { name: "switch", mode: "out-in" } },
+                        [
+                          "input" === _vm.mode
+                            ? _c("div", { key: "input", staticClass: "mt-3" }, [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-primary btn-block",
+                                    attrs: {
+                                      type: "submit",
+                                      disabled: "" === _vm.answer
+                                    }
+                                  },
+                                  [_vm._v("決定")]
+                                )
+                              ])
+                            : _vm.is_correct
+                            ? _c(
+                                "div",
+                                { key: "correct", staticClass: "result mt-3" },
+                                [
+                                  _c(
+                                    "p",
+                                    {
+                                      staticClass:
+                                        "result__text -correct alert alert-success"
+                                    },
+                                    [
+                                      _c(
+                                        "span",
+                                        {
+                                          staticClass: "result__icon -correct"
+                                        },
+                                        [_vm._v("〇")]
+                                      ),
+                                      _vm._v("正解！")
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "btn btn-primary btn-block",
+                                      attrs: { type: "submit" }
+                                    },
+                                    [_vm._v("次の問題へ")]
+                                  )
+                                ]
+                              )
+                            : _c(
+                                "div",
+                                {
+                                  key: "incorrect",
+                                  staticClass: "result mt-3"
+                                },
+                                [
+                                  _c(
+                                    "div",
+                                    { staticClass: "alert alert-danger" },
+                                    [
+                                      _c(
+                                        "p",
+                                        {
+                                          staticClass:
+                                            "result__text -incorrect mb-0"
+                                        },
+                                        [
+                                          _c(
+                                            "span",
+                                            {
+                                              staticClass:
+                                                "result__icon -incorrect"
+                                            },
+                                            [_vm._v("×")]
+                                          ),
+                                          _vm._v("残念")
+                                        ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "p",
+                                        { staticClass: "result__answer mb-0" },
+                                        [
+                                          _vm._v(
+                                            "正解は、" +
+                                              _vm._s(_vm.correct_answer) +
+                                              "でした"
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "btn btn-primary btn-block",
+                                      attrs: { type: "submit" }
+                                    },
+                                    [_vm._v("スコアを送信")]
+                                  )
+                                ]
+                              )
+                        ]
+                      )
+                    ],
+                    1
+                  )
+                ],
+                2
               )
         ])
       ])
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "mt-3" }, [
-      _c(
-        "button",
-        { staticClass: "btn btn-primary btn-block", attrs: { type: "submit" } },
-        [_vm._v("決定")]
-      )
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

@@ -15,7 +15,7 @@
                         <li>間違えた時点でゲームオーバーです。その時点での正解数がスコアになります</li>
                     </ul>
                     <div class="text-center mt-5">
-                        <a href="" class="btn btn-primary btn-lg">ゲームをはじめる</a>
+                        <a href="{{ route('play') }}" class="btn btn-primary btn-lg">ゲームをはじめる</a>
                     </div>
                 </div>
             </div>

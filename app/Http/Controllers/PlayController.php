@@ -17,12 +17,26 @@ class PlayController extends Controller
     }
 
     /**
-     * Show the application dashboard.
+     * ゲーム画面
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
     {
         return view('play');
+    }
+
+    /**
+     * 結果発表
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function result(Request $request)
+    {
+        if ( !$request->filled('score') ) {
+            abort(400);
+        }
+
+        return view('result', $request->only('score'));
     }
 }
