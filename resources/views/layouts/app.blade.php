@@ -18,6 +18,19 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <style>
+    .footer__link {
+        margin-left: 2rem;
+    }
+    @media (max-width: 767.98px) {
+        .footer__link {
+            display: block;
+            margin-top: 2rem;
+            margin-left: 0;
+        }
+    }
+    </style>
+    @yield('head')
 </head>
 <body>
     <div id="app">
@@ -33,7 +46,12 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-
+                        <li class="nav-item">
+                            <a href="{{ url('/') }}" class="nav-link">プレイ</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url('/') }}" class="nav-link">ランキング</a>
+                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -41,11 +59,11 @@
                         <!-- Authentication Links -->
                         @guest
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                <a class="nav-link" href="{{ route('login') }}">ログイン</a>
                             </li>
                             @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                    <a class="nav-link" href="{{ route('register') }}">会員登録</a>
                                 </li>
                             @endif
                         @else
@@ -58,7 +76,7 @@
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
+                                        ログアウト
                                     </a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -75,6 +93,11 @@
         <main class="py-4">
             @yield('content')
         </main>
+
+        <footer class="footer mt-4">
+            <p class="text-center">Copyright © Yuto Ono. All Rights Reserved.<a class="footer__link" href="https://yuto-coding.com/" target="_blank">作者について</a></p>
+        </footer>
     </div>
+    @yield('script')
 </body>
 </html>
