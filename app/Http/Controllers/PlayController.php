@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\User;
 use App\History;
 
 class PlayController extends Controller
@@ -43,15 +44,16 @@ class PlayController extends Controller
 
         if (Auth::check()) {
             $user = Auth::user();
+            $name = $user->name;
             History::create([
                 'user_id' => $user->id,
                 'score' => $score,
             ]);
         }
         else {
-            dump('Guest');
+            session([ 'score' => $score ]);
         }
 
-        return view('result', [ 'score' => $score ]);
+        return view('result', compact('name', 'score'));
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\History;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
@@ -55,5 +56,26 @@ class LoginController extends Controller
         $request->session()->invalidate();
 
         return $this->loggedOut($request) ?: redirect('/')->with('status', 'ログアウトしました');
+    }
+
+    /**
+     * ログイン直後の処理
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     * @return mixed
+     */
+    protected function authenticated(Request $request, $user)
+    {
+        $score = session('score');
+        if (isset($score)) {
+            History::create([
+                'user_id' => $user->id,
+                'score' => $score,
+            ]);
+            session()->forget('score');
+        }
+
+        redirect()->intended($this->redirectPath());
     }
 }

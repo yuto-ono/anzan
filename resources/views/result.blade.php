@@ -15,11 +15,19 @@
 }
 
 .result__rank {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
 }
 
 .result__invite {
     text-align: center;
+}
+
+.result__member {
+    text-align: center;
+}
+
+.result__member > a {
+    margin-left: 1rem;
 }
 
 </style>
@@ -34,14 +42,15 @@
 
                 <div class="card-body pb-5">
                     <div class="result">
-                        <p class="text-center">あなたのスコアは</p>
+                        <p class="text-center">{{ isset($name) ? "$name さん" : 'あなた' }}のスコアは</p>
                         <p class="result__score text-center">{{ $score }}</p>
-                        <p class="result__rank text-center">順位: 100 / 10000</p>
+                        <p class="result__rank text-center">ランキング: 100 / 10000</p>
 
                         <div class="mt-5">
                             @guest
                                 <p class="result__invite"><span class="d-inline-block">会員登録をして、</span><span class="d-inline-block">スコアを記録しませんか？</span></p>
                                 <a href="{{ route('register') }}" class="btn btn-primary btn-block btn-lg">会員登録</a>
+                                <p class="result__member mt-3">アカウントをお持ちの場合<a href="{{ route('login') }}">ログイン</a></p>
                             @else
                                 <a href="{{ route('play') }}" class="btn btn-primary btn-block btn-lg">もう一回</a>
                             @endguest
