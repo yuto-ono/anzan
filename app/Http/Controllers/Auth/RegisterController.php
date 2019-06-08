@@ -68,19 +68,28 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
-
         $score = session('score');
         if (isset($score)) {
+            $user = User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+                'score' => $score,
+            ]);
+
             History::create([
                 'user_id' => $user->id,
                 'score' => $score,
             ]);
+
             session()->forget('score');
+        }
+        else {
+            $user = User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+            ]);
         }
 
         return $user;

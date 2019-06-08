@@ -73,6 +73,10 @@ class LoginController extends Controller
                 'user_id' => $user->id,
                 'score' => $score,
             ]);
+            if ($user->personal_best < $score) {
+                $user->personal_best = $score;
+                $user->save();
+            }
             session()->forget('score');
         }
 
