@@ -14,7 +14,6 @@
 Auth::routes();
 
 Route::view('/', 'home');
-Route::view('/result-test', 'result', [ 'score' => 300 ]);
 Route::get('/play', 'PlayController@index')->name('play');
 Route::post('/result', 'PlayController@result')->name('result');
 Route::get('/rank', 'RankController@index')->name('rank');

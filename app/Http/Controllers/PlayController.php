@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Config;
 use App\User;
 use App\History;
 
@@ -16,7 +17,8 @@ class PlayController extends Controller
      */
     public function index()
     {
-        return view('play');
+        $play_option = Config::get('play_option');
+        return view('play', compact('play_option'));
     }
 
     /**
