@@ -50,7 +50,7 @@
                             <a href="{{ url('/') }}" class="nav-link">プレイ</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url('/') }}" class="nav-link">ランキング</a>
+                            <a href="{{ route('rank') }}" class="nav-link">ランキング</a>
                         </li>
                     </ul>
 

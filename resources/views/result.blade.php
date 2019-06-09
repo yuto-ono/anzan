@@ -14,7 +14,7 @@
     font-size: 5rem;
 }
 
-.result__rank {
+.result__pb {
     font-size: 1.25rem;
 }
 
@@ -44,7 +44,9 @@
                     <div class="result">
                         <p class="text-center">{{ isset($name) ? "$name さん" : 'あなた' }}のスコアは</p>
                         <p class="result__score text-center">{{ $score }}</p>
-                        <p class="result__rank text-center">ランキング: 100 / 10000</p>
+                        @if ($is_pb)
+                        <p class="result__pb text-center">自己ベスト更新！</p>
+                        @endif
 
                         <div class="mt-5">
                             @guest
