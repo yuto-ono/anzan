@@ -79,6 +79,10 @@ class PlayController extends Controller
 
         $ranking = $ranking_query->simplePaginate( $items_per_page );
 
+        if ($ranking->isEmpty()) {
+            abort(404);
+        }
+
         $page = (int)$request->input('page', 1);
 
         if ($page === 1) {
