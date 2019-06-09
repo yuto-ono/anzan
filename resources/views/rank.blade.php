@@ -20,9 +20,9 @@
                 <h1 class="card-header text-muted">ランキング</h1>
 
                 <div class="card-body">
-                    @isset($user)
+                    @isset($user_rank)
                     <p class="text-center">{{ $user->name }} さんのランキングは</p>
-                    <p class="text-center"><span style="font-size: 1.5rem;">{{ $user->rank }}位</span> / {{ $ranking_count }}人中</p>
+                    <p class="text-center"><span style="font-size: 1.5rem;">{{ $user_rank }}位</span> / {{ $ranking_count }}人中</p>
                     @endisset
                     <table class="table">
                         <thead>

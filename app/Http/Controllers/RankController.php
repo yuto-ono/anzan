@@ -52,11 +52,13 @@ class RankController extends Controller
 
         if (Auth::check()) {
             $user = Auth::user();
-            $user_rank = User::where('personal_best', '>', $user->personal_best)->count();
-            $user->rank = $user_rank + 1;
+            if ($user->personal_best) {
+                $user_rank = User::where('personal_best', '>', $user->personal_best)->count();
+                $user_rank++;
+            }
             $ranking_count = $ranking_query->count();
         }
 
-        return view('rank', compact('ranking', 'user', 'ranking_count'));
+        return view('rank', compact('ranking', 'user', 'user_rank','ranking_count'));
     }
 }

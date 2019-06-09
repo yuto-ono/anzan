@@ -52,6 +52,11 @@
                         <li class="nav-item">
                             <a href="{{ route('rank') }}" class="nav-link">ランキング</a>
                         </li>
+                        @auth
+                        <li class="nav-item">
+                            <a href="{{ route('history') }}" class="nav-link">プレイ履歴</a>
+                        </li>
+                        @endauth
                     </ul>
 
                     <!-- Right Side Of Navbar -->
