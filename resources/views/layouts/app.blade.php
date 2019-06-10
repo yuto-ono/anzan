@@ -16,6 +16,15 @@
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
+    <!-- OGP -->
+    <meta property="og:url" content="{{ request()->fullUrl() }}">
+    <meta property="og:title" content="{{ config('app.name', 'Laravel') }}">
+    <meta property="og:image" content="{{ url('/ogimage.png') }}">
+    <meta property="og:description" content="表示された数字を足していくだけのシンプルなゲームです。ぜひ皆さんもチャレンジして、脳を鍛えましょう！">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@YutoCoding">
+
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <style>
@@ -31,6 +40,17 @@
     }
     </style>
     @yield('head')
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-140813156-3"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'UA-140813156-3');
+</script>
+
 </head>
 <body>
     <div id="app">
