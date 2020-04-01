@@ -57,8 +57,10 @@ class RankController extends Controller
                 $user_rank++;
             }
             $ranking_count = $ranking_query->count();
+
+            return view('rank', compact('ranking', 'user', 'user_rank','ranking_count'));
         }
 
-        return view('rank', compact('ranking', 'user', 'user_rank','ranking_count'));
+        return view('rank', compact('ranking'));
     }
 }
