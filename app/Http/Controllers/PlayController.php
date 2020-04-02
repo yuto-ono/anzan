@@ -35,10 +35,10 @@ class PlayController extends Controller
         $is_pb = false;
         $score = $request->input('score');
 
-        if ($score > 0) {
-            if (Auth::check()) {
-                $user = Auth::user();
-                $name = $user->name;
+        if (Auth::check()) {
+            $user = Auth::user();
+            $name = $user->name;
+            if ($score > 0) {
                 History::create([
                     'user_id' => $user->id,
                     'score' => $score,
@@ -49,11 +49,12 @@ class PlayController extends Controller
                     $is_pb = true;
                 }
             }
-            else {
-                session([ 'score' => $score ]);
-            }
+            return view('result', compact('name', 'score', 'is_pb'));
+        }
+        if ($score > 0) {
+            session([ 'score' => $score ]);
         }
 
-        return view('result', compact('name', 'score', 'is_pb'));
+        return view('result', compact('score'));
     }
 }
